@@ -9,9 +9,9 @@ services:
   # The current Gorm version does NOT support compatible general data types:
   # https://github.com/photoprism/photoprism/issues/47
   photoprism:
-    user: "1000:1000"
     build: .
-    image: photoprism/photoprism:develop
+      #image: photoprism/photoprism:develop
+    image: lantern/photoprism
     depends_on:
       - lantern
       - dummy-webdav
@@ -21,11 +21,13 @@ services:
     ports:
       - "2342:2342" # default HTTP port (host:container)
       - "2343:2343" # acceptance Test HTTP port (host:container)
-    working_dir: "/go/src/github.com/photoprism/photoprism"
+    working_dir: "/photoprism"
+    user: "1000:1000"
     volumes:
-      - ".:/go/src/github.com/photoprism/photoprism"
-      - "go-mod:/go/pkg/mod"
-      - "originals:/go/src/github.com/photoprism/photoprism/storage/originals"
+      - "originals:/photoprism/originals"
+    #  - ".:/go/src/github.com/photoprism/photoprism"
+    #  - "go-mod:/go/pkg/mod"
+    #  - "originals:/go/src/github.com/photoprism/photoprism/storage/originals"
     shm_size: "2gb"
     environment:
       PHOTOPRISM_INIT: "https"
@@ -49,10 +51,10 @@ services:
       PHOTOPRISM_DATABASE_USER: "photoprism"
       PHOTOPRISM_DATABASE_PASSWORD: "photoprism"
       PHOTOPRISM_TEST_DRIVER: "sqlite"
-      PHOTOPRISM_ASSETS_PATH: "/go/src/github.com/photoprism/photoprism/assets"
-      PHOTOPRISM_STORAGE_PATH: "/go/src/github.com/photoprism/photoprism/storage"
-      PHOTOPRISM_ORIGINALS_PATH: "/go/src/github.com/photoprism/photoprism/storage/originals"
-      PHOTOPRISM_IMPORT_PATH: "/go/src/github.com/photoprism/photoprism/storage/import"
+        #PHOTOPRISM_ASSETS_PATH: "/go/src/github.com/photoprism/photoprism/assets"
+        #PHOTOPRISM_STORAGE_PATH: "/go/src/github.com/photoprism/photoprism/storage"
+        #PHOTOPRISM_ORIGINALS_PATH: "/go/src/github.com/photoprism/photoprism/storage/originals"
+        #PHOTOPRISM_IMPORT_PATH: "/go/src/github.com/photoprism/photoprism/storage/import"
       PHOTOPRISM_DISABLE_CHOWN: "false"       # disables updating storage permissions via chmod and chown on startup
       PHOTOPRISM_DISABLE_BACKUPS: "false"     # disables backing up albums and photo metadata to YAML files
       PHOTOPRISM_DISABLE_WEBDAV: "false"      # disables built-in WebDAV server

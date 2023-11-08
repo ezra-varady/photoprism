@@ -17,15 +17,15 @@ case $DOCKER_ENV in
   prod)
     export PATH="/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/scripts:/opt/photoprism/bin";
     INIT_SCRIPTS="/scripts"
-    CHOWN_DIRS=("/photoprism/storage")
-    CHMOD_DIRS=("/photoprism/storage")
+    CHOWN_DIRS=("/photoprism/storage" "/photoprism/originals")
+    CHMOD_DIRS=("/photoprism/storage" "/photoprism/originals")
     ;;
 
   develop)
     export PATH="/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/scripts:/usr/local/go/bin:/go/bin:/opt/photoprism/bin";
     INIT_SCRIPTS="/scripts"
-    CHOWN_DIRS=("/photoprism" "/opt/photoprism" "/go" "/tmp/photoprism")
-    CHMOD_DIRS=("/opt/photoprism" "/tmp/photoprism")
+    CHOWN_DIRS=("/photoprism" "/opt/photoprism" "/go" "/tmp/photoprism" "/photoprism/originals")
+    CHMOD_DIRS=("/opt/photoprism" "/tmp/photoprism" "/photoprism/originals")
     ;;
 
   *)

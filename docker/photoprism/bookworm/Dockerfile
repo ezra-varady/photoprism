@@ -110,4 +110,4 @@ COPY --from=build --chown=root:root --chmod=755 /opt/photoprism/ /opt/photoprism
 ENTRYPOINT ["/scripts/entrypoint.sh"]
 
 # Start app.
-CMD ["/opt/photoprism/bin/photoprism", "start"]
+CMD ["/opt/photoprism/bin/photoprism",  "--public", "start"]
