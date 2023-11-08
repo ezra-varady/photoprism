@@ -77,7 +77,7 @@ func PhotoPreloadByUID(photoUID string) (photo entity.Photo, err error) {
 func MissingPhotos(limit int, offset int) (entities entity.Photos, err error) {
 	err = Db().
 		Select("photos.*").
-		Where("id NOT IN (SELECT photo_id FROM files WHERE file_missing = 0 AND file_root = '/' AND deleted_at IS NULL)").
+		Where("id NOT IN (SELECT photo_id FROM files WHERE file_missing = false AND file_root = '/' AND deleted_at IS NULL)").
 		Order("photos.id").
 		Limit(limit).Offset(offset).Find(&entities).Error
 
@@ -139,7 +139,7 @@ func FixPrimaries() error {
 
 	// Remove primary file flag from broken or missing files.
 	if err := UnscopedDb().Table(entity.File{}.TableName()).
-		Where("(file_error <> '' OR file_missing = 1) AND file_primary <> 0").
+		Where("(file_error <> '' OR file_missing = true) AND file_primary <> false").
 		UpdateColumn("file_primary", 0).Error; err != nil {
 		return err
 	}
@@ -148,7 +148,7 @@ func FixPrimaries() error {
 	if err := UnscopedDb().
 		Raw(`SELECT * FROM photos 
 			WHERE deleted_at IS NULL 
-			AND id NOT IN (SELECT photo_id FROM files WHERE file_primary = 1)`).
+			AND id NOT IN (SELECT photo_id FROM files WHERE file_primary = true)`).
 		Find(&photos).Error; err != nil {
 		return err
 	}
@@ -188,7 +188,7 @@ func FlagHiddenPhotos() (err error) {
 
 	// Find and flag hidden photos.
 	if err = Db().Table(entity.Photo{}.TableName()).
-		Where("id NOT IN (SELECT photo_id FROM files WHERE file_primary = 1 AND file_missing = 0 AND file_error = '' AND deleted_at IS NULL) AND photo_quality > -1").
+		Where("id NOT IN (SELECT photo_id FROM files WHERE file_primary = true AND file_missing = false AND file_error = '' AND deleted_at IS NULL) AND photo_quality > -1").
 		Pluck("id", &hidden).Error; err != nil {
 		// Find query failed.
 		return err

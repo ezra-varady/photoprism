@@ -25,7 +25,7 @@ func PeopleCount() (count int, err error) {
 	err = Db().
 		Table(entity.Subject{}.TableName()).
 		Where("deleted_at IS NULL").
-		Where("subj_hidden = 0").
+		Where("subj_hidden = false").
 		Where("subj_type = ?", entity.SubjPerson).
 		Count(&count).Error
 
@@ -78,7 +78,7 @@ func CreateMarkerSubjects() (affected int64, err error) {
 
 	if err := Db().
 		Where("subj_uid = '' AND marker_name <> '' AND subj_src <> ?", entity.SrcAuto).
-		Where("marker_invalid = 0 AND marker_type = ?", entity.MarkerFace).
+		Where("marker_invalid = false AND marker_type = ?", entity.MarkerFace).
 		Order("marker_name").
 		Find(&markers).Error; err != nil {
 		return affected, err

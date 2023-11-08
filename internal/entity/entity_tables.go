@@ -115,8 +115,11 @@ func (list Tables) Migrate(db *gorm.DB, opt migrate.Options) {
 		log.Error(err)
 	}
 
+	dialect := Db().Dialect().GetName()
+	log.Debugf("dialect is %s", dialect)
+
 	// Run ORM auto migrations.
-	if opt.AutoMigrate {
+	if opt.AutoMigrate && dialect != "postgres" {
 		for name, entity = range list {
 			if err := db.AutoMigrate(entity).Error; err != nil {
 				log.Debugf("migrate: %s (waiting 1s)", err.Error())

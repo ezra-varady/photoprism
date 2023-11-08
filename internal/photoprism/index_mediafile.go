@@ -151,7 +151,7 @@ func (ind *Index) UserMediaFile(m *MediaFile, o IndexOptions, originalName, phot
 		} else if photoQuery = entity.UnscopedDb().First(&photo, "photo_path = ? AND photo_name = ? AND photo_stack > -1", filePath, fileBase); photoQuery.Error == nil {
 			// Found.
 			fileStacked = true
-		} else if photoQuery = entity.UnscopedDb().First(&photo, "id IN (SELECT photo_id FROM files WHERE file_name = LIKE ? AND file_root = ? AND file_sidecar = 0 AND file_missing = 0) AND photo_path = ? AND photo_stack > -1", fs.StripKnownExt(fileName)+".%", entity.RootOriginals, filePath); photoQuery.Error == nil {
+		} else if photoQuery = entity.UnscopedDb().First(&photo, "id IN (SELECT photo_id FROM files WHERE file_name = LIKE ? AND file_root = ? AND file_sidecar = false AND file_missing = false) AND photo_path = ? AND photo_stack > -1", fs.StripKnownExt(fileName)+".%", entity.RootOriginals, filePath); photoQuery.Error == nil {
 			// Found.
 			fileStacked = true
 		}
@@ -277,7 +277,7 @@ func (ind *Index) UserMediaFile(m *MediaFile, o IndexOptions, originalName, phot
 	// Flag first JPEG as primary file for this photo.
 	if !file.FilePrimary {
 		if photoExists {
-			if res := entity.UnscopedDb().Where("photo_id = ? AND file_primary = 1 AND file_type IN (?) AND file_error = ''", photo.ID, media.PreviewExpr).First(&primaryFile); res.Error != nil {
+			if res := entity.UnscopedDb().Where("photo_id = ? AND file_primary = true AND file_type IN (?) AND file_error = ''", photo.ID, media.PreviewExpr).First(&primaryFile); res.Error != nil {
 				file.FilePrimary = m.IsPreviewImage()
 			}
 		} else {

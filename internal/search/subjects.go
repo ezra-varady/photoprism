@@ -76,25 +76,25 @@ func Subjects(f form.SearchSubjects) (results SubjectResults, err error) {
 
 	if !f.All {
 		if txt.Yes(f.Favorite) {
-			s = s.Where("subj_favorite = 1")
+			s = s.Where("subj_favorite = true")
 		} else if txt.No(f.Favorite) {
-			s = s.Where("subj_favorite = 0")
+			s = s.Where("subj_favorite = false")
 		}
 
 		if !txt.Yes(f.Hidden) {
-			s = s.Where("subj_hidden = 0")
+			s = s.Where("subj_hidden = false")
 		}
 
 		if txt.Yes(f.Private) {
-			s = s.Where("subj_private = 1")
+			s = s.Where("subj_private = true")
 		} else if txt.No(f.Private) {
-			s = s.Where("subj_private = 0")
+			s = s.Where("subj_private = false")
 		}
 
 		if txt.Yes(f.Excluded) {
-			s = s.Where("subj_excluded = 1")
+			s = s.Where("subj_excluded = true")
 		} else if txt.No(f.Excluded) {
-			s = s.Where("subj_excluded = 0")
+			s = s.Where("subj_excluded = false")
 		}
 	}
 

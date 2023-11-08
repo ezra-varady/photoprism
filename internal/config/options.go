@@ -119,6 +119,7 @@ type Options struct {
 	HttpHost              string        `yaml:"HttpHost" json:"-" flag:"http-host"`
 	HttpPort              int           `yaml:"HttpPort" json:"-" flag:"http-port"`
 	HttpSocket            string        `yaml:"-" json:"-" flag:"-"`
+	DatabaseExt           string        `yaml:"DatabaseExt" json:"-" flag:"database-ext"`
 	DatabaseDriver        string        `yaml:"DatabaseDriver" json:"-" flag:"database-driver"`
 	DatabaseDsn           string        `yaml:"DatabaseDsn" json:"-" flag:"database-dsn"`
 	DatabaseName          string        `yaml:"DatabaseName" json:"-" flag:"database-name"`

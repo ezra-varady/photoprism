@@ -33,8 +33,9 @@ import (
 var log = event.Log
 
 const (
-	MySQL   = "mysql"
-	SQLite3 = "sqlite3"
+	MySQL      = "mysql"
+	SQLite3    = "sqlite3"
+	PostgreSQL = "postgres"
 )
 
 // Cols represents a list of database columns.

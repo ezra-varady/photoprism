@@ -14,6 +14,7 @@ import (
 const (
 	MySQL           = "mysql"
 	SQLite3         = "sqlite3"
+	PostgreSQL      = "postgres"
 	SQLiteTestDB    = ".test.db"
 	SQLiteMemoryDSN = ":memory:?cache=shared"
 )
@@ -68,7 +69,7 @@ func (g *DbConn) Open() {
 		}
 	}
 
-	db.LogMode(false)
+	db.LogMode(true)
 	db.SetLogger(log)
 	db.DB().SetMaxIdleConns(4)
 	db.DB().SetMaxOpenConns(256)

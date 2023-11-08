@@ -58,6 +58,7 @@ func main() {
 			os.Exit(1)
 		}
 	}()
+	log.SetReportCaller(true)
 
 	app := cli.NewApp()
 	app.Usage = appAbout

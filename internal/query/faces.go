@@ -87,7 +87,7 @@ func MatchFaceMarkers() (affected int64, err error) {
 
 	for _, f := range faces {
 		if res := Db().Model(&entity.Marker{}).
-			Where("marker_invalid = 0").
+			Where("marker_invalid = false").
 			Where("face_id = ?", f.ID).
 			Where("subj_src = ?", entity.SrcAuto).
 			Where("subj_uid <> ?", f.SubjUID).
@@ -128,7 +128,7 @@ func CountNewFaceMarkers(size, score int) (n int) {
 
 	q := Db().Model(&entity.Markers{}).
 		Where("marker_type = ?", entity.MarkerFace).
-		Where("face_id = '' AND marker_invalid = 0 AND embeddings_json <> ''")
+		Where("face_id = '' AND marker_invalid = false AND embeddings_json <> ''")
 
 	if size > 0 {
 		q = q.Where("size >= ?", size)

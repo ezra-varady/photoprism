@@ -64,15 +64,16 @@ type SearchPhotos struct {
 	Keywords  string    `form:"keywords" example:"keywords:\"sand&water\"" notes:"Keywords (combinable with & and |)"`
 	Label     string    `form:"label" example:"label:cat|dog" notes:"Label Names (separate with |)"`
 	Category  string    `form:"category" example:"category:airport" notes:"Location Category"`
-	Country   string    `form:"country" example:"country:\"de|us\"" notes:"Location Country Code (separate with |)"`                            // Moments
-	State     string    `form:"state" example:"state:\"Baden-Württemberg\"" notes:"Location State (separate with |)"`                           // Moments
-	City      string    `form:"city" example:"city:\"Berlin\"" notes:"Location City (separate with |)"`                                         // Moments
-	Year      string    `form:"year" example:"year:1990|2003" notes:"Year (separate with |)"`                                                   // Moments
-	Month     string    `form:"month" example:"month:7|10" notes:"Month (1-12, separate with |)"`                                               // Moments
-	Day       string    `form:"day" example:"day:3|13" notes:"Day of Month (1-31, separate with |)"`                                            // Moments
-	Face      string    `form:"face" example:"face:PN6QO5INYTUSAATOFL43LL2ABAV5ACZG" notes:"Face ID, yes, no, new, or kind"`                    // UIDs
-	Faces     string    `form:"faces" example:"faces:yes faces:3" notes:"Minimum number of Faces (yes = 1)"`                                    // Find or exclude faces if detected.
-	Subject   string    `form:"subject" example:"subject:\"Jane Doe & John Doe\"" notes:"Alias for person"`                                     // UIDs
+	Country   string    `form:"country" example:"country:\"de|us\"" notes:"Location Country Code (separate with |)"`         // Moments
+	State     string    `form:"state" example:"state:\"Baden-Württemberg\"" notes:"Location State (separate with |)"`        // Moments
+	City      string    `form:"city" example:"city:\"Berlin\"" notes:"Location City (separate with |)"`                      // Moments
+	Year      string    `form:"year" example:"year:1990|2003" notes:"Year (separate with |)"`                                // Moments
+	Month     string    `form:"month" example:"month:7|10" notes:"Month (1-12, separate with |)"`                            // Moments
+	Day       string    `form:"day" example:"day:3|13" notes:"Day of Month (1-31, separate with |)"`                         // Moments
+	Face      string    `form:"face" example:"face:PN6QO5INYTUSAATOFL43LL2ABAV5ACZG" notes:"Face ID, yes, no, new, or kind"` // UIDs
+	Faces     string    `form:"faces" example:"faces:yes faces:3" notes:"Minimum number of Faces (yes = 1)"`                 // Find or exclude faces if detected.
+	Subject   string    `form:"subject" example:"subject:\"Jane Doe & John Doe\"" notes:"Alias for person"`                  // UIDs
+	Semantic  string    `form:"semantic" example:"semantic:\"a cute puppy\"" notes:"semantic description of images"`
 	Person    string    `form:"person" example:"person:\"Jane Doe & John Doe\"" notes:"Subject Names, exact matches (combinable with & and |)"` // Alias for Subject
 	Subjects  string    `form:"subjects" example:"subjects:\"Jane & John\"" notes:"Alias for people"`                                           // People names
 	People    string    `form:"people" example:"people:\"Jane & John\"" notes:"Subject Names (combinable with & and |)"`                        // Alias for Subjects

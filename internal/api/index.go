@@ -102,6 +102,7 @@ func StartIndexing(router *gin.RouterGroup) {
 
 			// Start purge to remove missing files from search results.
 			if files, photos, updated, err := w.Start(opt); err != nil {
+				log.Debugf("500 error %s", err)
 				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": txt.UpperFirst(err.Error())})
 				return
 			} else if updated > 0 {

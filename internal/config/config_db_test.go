@@ -128,7 +128,7 @@ func TestConfig_DatabaseConns(t *testing.T) {
 
 func TestConfig_DatabaseConnsIdle(t *testing.T) {
 	c := NewConfig(CliTestContext())
-	c.options.DatabaseConnsIdle = 14
+	c.options.DatabaseConnsIdle = true4
 	c.options.DatabaseConns = 28
 	assert.Equal(t, 14, c.DatabaseConnsIdle())
 

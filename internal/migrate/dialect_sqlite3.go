@@ -49,7 +49,7 @@ var DialectSQLite3 = Migrations{
 		ID:         "20220329-083000",
 		Dialect:    "sqlite3",
 		Stage:      "main",
-		Statements: []string{"UPDATE files SET media_id = CASE WHEN photo_id IS NOT NULL AND file_missing = 0 AND deleted_at IS NULL THEN ((10000000000 - photo_id) || '-' || (1 + file_sidecar - file_primary) || '-' || file_uid) END WHERE 1;"},
+		Statements: []string{"UPDATE files SET media_id = CASE WHEN photo_id IS NOT NULL AND file_missing = false AND deleted_at IS NULL THEN ((10000000000 - photo_id) || '-' || (1 + file_sidecar - file_primary) || '-' || file_uid) END WHERE 1;"},
 	},
 	{
 		ID:         "20220329-091000",
@@ -85,7 +85,7 @@ var DialectSQLite3 = Migrations{
 		ID:         "20230309-000001",
 		Dialect:    "sqlite3",
 		Stage:      "main",
-		Statements: []string{"UPDATE auth_users SET auth_provider = 'local' WHERE id = 1;", "UPDATE auth_users SET auth_provider = 'none' WHERE id = -1;", "UPDATE auth_users SET auth_provider = 'token' WHERE id = -2;", "UPDATE auth_users SET auth_provider = 'default' WHERE auth_provider = '' OR auth_provider = 'password' OR auth_provider IS NULL;"},
+		Statements: []string{"UPDATE auth_users SET auth_provider = 'local' WHERE id = true;", "UPDATE auth_users SET auth_provider = 'none' WHERE id = -1;", "UPDATE auth_users SET auth_provider = 'token' WHERE id = -2;", "UPDATE auth_users SET auth_provider = 'default' WHERE auth_provider = '' OR auth_provider = 'password' OR auth_provider IS NULL;"},
 	},
 	{
 		ID:         "20230313-000001",

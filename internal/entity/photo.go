@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"path"
@@ -253,6 +254,8 @@ func (m *Photo) Create() error {
 	photoMutex.Lock()
 	defer photoMutex.Unlock()
 
+	str, _ := json.Marshal(m)
+	log.Debugf(string(str))
 	if err := UnscopedDb().Create(m).Error; err != nil {
 		return err
 	}
@@ -512,7 +515,7 @@ func (m *Photo) PreloadAlbums() {
 	q := Db().NewScope(nil).DB().
 		Table("albums").
 		Select(`albums.*`).
-		Joins("JOIN photos_albums pa ON pa.album_uid = albums.album_uid AND pa.photo_uid = ? AND pa.hidden = 0", m.PhotoUID).
+		Joins("JOIN photos_albums pa ON pa.album_uid = albums.album_uid AND pa.photo_uid = ? AND pa.hidden = false", m.PhotoUID).
 		Where("albums.deleted_at IS NULL").
 		Order("albums.album_title ASC")
 
@@ -707,7 +710,7 @@ func (m *Photo) AllFilesMissing() bool {
 	count := 0
 
 	if err := Db().Model(&File{}).
-		Where("photo_id = ? AND file_missing = 0", m.ID).
+		Where("photo_id = ? AND file_missing = false", m.ID).
 		Count(&count).Error; err != nil {
 		log.Error(err)
 	}
@@ -927,7 +930,7 @@ func (m *Photo) SetPrimary(fileUid string) (err error) {
 	if fileUid != "" {
 		// Do nothing.
 	} else if err = Db().Model(File{}).
-		Where("photo_uid = ? AND file_type IN (?) AND file_missing = 0 AND file_error = ''", m.PhotoUID, media.PreviewExpr).
+		Where("photo_uid = ? AND file_type IN (?) AND file_missing = false AND file_error = ''", m.PhotoUID, media.PreviewExpr).
 		Order("file_width DESC, file_hdr DESC").Limit(1).
 		Pluck("file_uid", &files).Error; err != nil {
 		return err

@@ -73,7 +73,7 @@ var DialectMySQL = Migrations{
 		ID:         "20220329-083000",
 		Dialect:    "mysql",
 		Stage:      "main",
-		Statements: []string{"UPDATE files SET media_id = CASE WHEN file_missing = 0 AND deleted_at IS NULL THEN CONCAT((10000000000 - photo_id), '-', 1 + file_sidecar - file_primary, '-', file_uid) END;"},
+		Statements: []string{"UPDATE files SET media_id = CASE WHEN file_missing = false AND deleted_at IS NULL THEN CONCAT((10000000000 - photo_id), '-', 1 + file_sidecar - file_primary, '-', file_uid) END;"},
 	},
 	{
 		ID:         "20220329-090000",
@@ -91,7 +91,7 @@ var DialectMySQL = Migrations{
 		ID:         "20220329-093000",
 		Dialect:    "mysql",
 		Stage:      "main",
-		Statements: []string{"UPDATE files SET time_index = CASE WHEN file_missing = 0 AND deleted_at IS NULL THEN CONCAT(100000000000000 - CAST(photo_taken_at AS UNSIGNED), '-', media_id) END;"},
+		Statements: []string{"UPDATE files SET time_index = CASE WHEN file_missing = false AND deleted_at IS NULL THEN CONCAT(100000000000000 - CAST(photo_taken_at AS UNSIGNED), '-', media_id) END;"},
 	},
 	{
 		ID:         "20220421-200000",
@@ -157,7 +157,7 @@ var DialectMySQL = Migrations{
 		ID:         "20230309-000001",
 		Dialect:    "mysql",
 		Stage:      "main",
-		Statements: []string{"UPDATE auth_users SET auth_provider = 'local' WHERE id = 1;", "UPDATE auth_users SET auth_provider = 'none' WHERE id = -1;", "UPDATE auth_users SET auth_provider = 'token' WHERE id = -2;", "UPDATE auth_users SET auth_provider = 'default' WHERE auth_provider = '' OR auth_provider = 'password' OR auth_provider IS NULL;"},
+		Statements: []string{"UPDATE auth_users SET auth_provider = 'local' WHERE id = true;", "UPDATE auth_users SET auth_provider = 'none' WHERE id = -1;", "UPDATE auth_users SET auth_provider = 'token' WHERE id = -2;", "UPDATE auth_users SET auth_provider = 'default' WHERE auth_provider = '' OR auth_provider = 'password' OR auth_provider IS NULL;"},
 	},
 	{
 		ID:         "20230313-000001",

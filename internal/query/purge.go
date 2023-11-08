@@ -71,7 +71,7 @@ func PurgeOrphanDuplicates() error {
 
 	result := UnscopedDb().
 		Delete(entity.Duplicate{},
-			"file_hash NOT IN (SELECT file_hash FROM files WHERE file_missing = 0 AND deleted_at IS NULL)")
+			"file_hash NOT IN (SELECT file_hash FROM files WHERE file_missing = false AND deleted_at IS NULL)")
 
 	return result.Error
 }

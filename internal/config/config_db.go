@@ -13,6 +13,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/lib/pq"
 
 	"github.com/photoprism/photoprism/internal/entity"
 	"github.com/photoprism/photoprism/internal/migrate"
@@ -43,6 +44,8 @@ func (c *Config) DatabaseDriver() string {
 		c.options.DatabaseDriver = MySQL
 	case SQLite3, "sqlite", "sqllite", "test", "file", "":
 		c.options.DatabaseDriver = SQLite3
+	case Postgres:
+		c.options.DatabaseDriver = Postgres
 	case "tidb":
 		log.Warnf("config: database driver 'tidb' is deprecated, using sqlite")
 		c.options.DatabaseDriver = SQLite3
@@ -378,7 +381,7 @@ func (c *Config) connectDb() error {
 	}
 
 	// Configure database logging.
-	db.LogMode(false)
+	db.LogMode(true)
 	db.SetLogger(log)
 
 	// Set database connection parameters.

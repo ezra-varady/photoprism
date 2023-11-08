@@ -201,12 +201,12 @@ func MomentsTime(threshold int, public bool) (results Moments, err error) {
 
 	// Ignore private pictures?
 	if public {
-		stmt = stmt.Where("photo_private = 0")
+		stmt = stmt.Where("photo_private = false")
 	}
 
 	stmt = stmt.Group("photos.photo_year, photos.photo_month").
 		Order("photos.photo_year DESC, photos.photo_month DESC").
-		Having("photo_count >= ?", threshold)
+		Having("COUNT(*) >= ?", threshold)
 
 	if err = stmt.Scan(&results).Error; err != nil {
 		return results, err
@@ -223,11 +223,11 @@ func MomentsCountries(threshold int, public bool) (results Moments, err error) {
 
 	// Ignore private pictures?
 	if public {
-		stmt = stmt.Where("photo_private = 0")
+		stmt = stmt.Where("photo_private = false")
 	}
 
 	stmt = stmt.Group("photo_year, photo_country").
-		Having("photo_count >= ?", threshold)
+		Having("COUNT(*) >= ?", threshold)
 
 	if err = stmt.Scan(&results).Error; err != nil {
 		return results, err
@@ -245,11 +245,11 @@ func MomentsStates(threshold int, public bool) (results Moments, err error) {
 
 	// Ignore private pictures?
 	if public {
-		stmt = stmt.Where("photo_private = 0")
+		stmt = stmt.Where("photo_private = false")
 	}
 
 	stmt = stmt.Group("p.place_country, p.place_state").
-		Having("photo_count >= ?", threshold)
+		Having("COUNT(*) >= ?", threshold)
 
 	if err = stmt.Scan(&results).Error; err != nil {
 		return results, err
@@ -276,11 +276,11 @@ func MomentsLabels(threshold int, public bool) (results Moments, err error) {
 
 	// Ignore private pictures?
 	if public {
-		stmt = stmt.Where("photo_private = 0")
+		stmt = stmt.Where("photo_private = false")
 	}
 
 	stmt = stmt.Group("l.label_slug").
-		Having("photo_count >= ?", threshold)
+		Having("COUNT(*) >= ?", threshold)
 
 	if err = stmt.Scan(&m).Error; err != nil {
 		return m, err

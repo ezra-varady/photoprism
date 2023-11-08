@@ -1,6 +1,7 @@
 package migrate
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -101,8 +102,10 @@ func (m *Migrations) Start(db *gorm.DB, opt Options) {
 				log.Debugf("migrate: %s skipped", migration.ID)
 				continue
 			}
-		} else if err := db.Create(migration).Error; err != nil {
+		} else if err := db.Create(&migration).Error; err != nil {
 			// Should not happen.
+			str, _ := json.Marshal(migration)
+			log.Debugf(string(str))
 			log.Warnf("migrate: creating %s failed with %s [%s]", migration.ID, err, time.Since(start))
 			continue
 		}

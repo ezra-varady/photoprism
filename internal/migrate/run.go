@@ -28,6 +28,10 @@ func Run(db *gorm.DB, opt Options) (err error) {
 		return fmt.Errorf("migrate: %s (create migrations table)", err)
 	}
 
+	if name == "lantern" {
+		migrations := Dialects["postgres"]
+		migrations.Start(db, opt)
+	}
 	// Run migrations for dialect.
 	if migrations, ok := Dialects[name]; ok && len(migrations) > 0 {
 		migrations.Start(db, opt)

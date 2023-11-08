@@ -523,27 +523,27 @@ func (c *Config) ClientUser(withSettings bool) ClientConfig {
 	if hidePrivate {
 		c.Db().
 			Table("photos").
-			Select("SUM(photo_type = 'video' AND photo_quality > -1 AND photo_private = 0) AS videos, " +
-				"SUM(photo_type = 'live' AND photo_quality > -1 AND photo_private = 0) AS live, " +
-				"SUM(photo_quality = -1) AS hidden, " +
-				"SUM(photo_type NOT IN ('live', 'video') AND photo_quality > -1 AND photo_private = 0) AS photos, " +
-				"SUM(photo_quality BETWEEN 0 AND 2) AS review, " +
-				"SUM(photo_favorite = 1 AND photo_private = 0 AND photo_quality > -1) AS favorites, " +
-				"SUM(photo_private = 1 AND photo_quality > -1) AS private").
-			Where("photos.id NOT IN (SELECT photo_id FROM files WHERE file_primary = 1 AND (file_missing = 1 OR file_error <> ''))").
+			Select("COALESCE(SUM(CASE WHEN photo_type = 'video' AND photo_quality > -1 AND photo_private = false THEN 1 END)) AS videos, " +
+				"COALESCE(SUM(CASE WHEN photo_type = 'live' AND photo_quality > -1 AND photo_private = false THEN 1 END)) AS live, " +
+				"COALESCE(SUM(CASE WHEN photo_quality = -1 THEN 1 END)) AS hidden, " +
+				"COALESCE(SUM(CASE WHEN photo_type NOT IN ('live', 'video') AND photo_quality > -1 AND photo_private = false THEN 1 END)) AS photos, " +
+				"COALESCE(SUM(CASE WHEN photo_quality BETWEEN 0 AND 2 THEN 1 END)) AS review, " +
+				"COALESCE(SUM(CASE WHEN photo_favorite = true AND photo_private = false AND photo_quality > -1 THEN 1 END)) AS favorites, " +
+				"COALESCE(SUM(CASE WHEN photo_private = true AND photo_quality > -1 THEN 1 END)) AS private").
+			Where("photos.id NOT IN (SELECT photo_id FROM files WHERE file_primary = true AND (file_missing = true OR file_error <> ''))").
 			Where("deleted_at IS NULL").
 			Take(&cfg.Count)
 	} else {
 		c.Db().
 			Table("photos").
-			Select("SUM(photo_type = 'video' AND photo_quality > -1) AS videos, " +
-				"SUM(photo_type = 'live' AND photo_quality > -1) AS live, " +
-				"SUM(photo_quality = -1) AS hidden, " +
-				"SUM(photo_type NOT IN ('live', 'video') AND photo_quality > -1) AS photos, " +
-				"SUM(photo_quality BETWEEN 0 AND 2) AS review, " +
-				"SUM(photo_favorite = 1 AND photo_quality > -1) AS favorites, " +
+			Select("COALESCE(SUM(CASE WHEN photo_type = 'video' AND photo_quality > -1 THEN 1 END)) AS videos, " +
+				"COALESCE(SUM(CASE WHEN photo_type = 'live' AND photo_quality > -1 THEN 1 END)) AS live, " +
+				"COALESCE(SUM(CASE WHEN photo_quality = -1 THEN 1 END)) AS hidden, " +
+				"COALESCE(SUM(CASE WHEN photo_type NOT IN ('live', 'video') AND photo_quality > -1 THEN 1 END)) AS photos, " +
+				"COALESCE(SUM(CASE WHEN photo_quality BETWEEN 0 AND 2 THEN 1 END)) AS review, " +
+				"COALESCE(SUM(CASE WHEN photo_favorite = true AND photo_quality > -1 THEN 1 END)) AS favorites, " +
 				"0 AS private").
-			Where("photos.id NOT IN (SELECT photo_id FROM files WHERE file_primary = 1 AND (file_missing = 1 OR file_error <> ''))").
+			Where("photos.id NOT IN (SELECT photo_id FROM files WHERE file_primary = true AND (file_missing = true OR file_error <> ''))").
 			Where("deleted_at IS NULL").
 			Take(&cfg.Count)
 	}
@@ -552,7 +552,7 @@ func (c *Config) ClientUser(withSettings bool) ClientConfig {
 	if c.Settings().Features.Archive {
 		c.Db().
 			Table("photos").
-			Select("SUM(photo_quality > -1) AS archived").
+			Select("COALESCE(SUM(CASE WHEN photo_quality > -1 THEN 1 END)) AS archived").
 			Where("deleted_at IS NOT NULL").
 			Take(&cfg.Count)
 	}
@@ -570,34 +570,34 @@ func (c *Config) ClientUser(withSettings bool) ClientConfig {
 		Select("MAX(photo_count) AS label_max_photos, COUNT(*) AS labels").
 		Where("photo_count > 0").
 		Where("deleted_at IS NULL").
-		Where("(label_priority >= 0 OR label_favorite = 1)").
+		Where("(label_priority >= 0 OR label_favorite = true)").
 		Take(&cfg.Count)
 
 	if hidePrivate {
 		c.Db().
 			Table("albums").
-			Select("SUM(album_type = ?) AS albums, "+
-				"SUM(album_type = ?) AS moments, "+
-				"SUM(album_type = ?) AS months, "+
-				"SUM(album_type = ?) AS states, "+
-				"SUM(album_type = ?) AS folders, "+
-				"SUM(album_type = ? AND album_private = 1) AS private_albums, "+
-				"SUM(album_type = ? AND album_private = 1) AS private_moments, "+
-				"SUM(album_type = ? AND album_private = 1) AS private_months, "+
-				"SUM(album_type = ? AND album_private = 1) AS private_states, "+
-				"SUM(album_type = ? AND album_private = 1) AS private_folders",
+			Select("COALESCE(SUM(CASE WHEN album_type = ? THEN 1 END)) AS albums, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? THEN 1 END)) AS moments, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? THEN 1 END)) AS months, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? THEN 1 END)) AS states, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? THEN 1 END)) AS folders, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? AND album_private = true THEN 1 END)) AS private_albums, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? AND album_private = true THEN 1 END)) AS private_moments, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? AND album_private = true THEN 1 END)) AS private_months, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? AND album_private = true THEN 1 END)) AS private_states, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? AND album_private = true THEN 1 END)) AS private_folders",
 				entity.AlbumManual, entity.AlbumMoment, entity.AlbumMonth, entity.AlbumState, entity.AlbumFolder,
 				entity.AlbumManual, entity.AlbumMoment, entity.AlbumMonth, entity.AlbumState, entity.AlbumFolder).
-			Where("deleted_at IS NULL AND (albums.album_type <> 'folder' OR albums.album_path IN (SELECT photos.photo_path FROM photos WHERE photos.photo_private = 0 AND photos.deleted_at IS NULL))").
+			Where("deleted_at IS NULL AND (albums.album_type <> 'folder' OR albums.album_path IN (SELECT photos.photo_path FROM photos WHERE photos.photo_private = false AND photos.deleted_at IS NULL))").
 			Take(&cfg.Count)
 	} else {
 		c.Db().
 			Table("albums").
-			Select("SUM(album_type = ?) AS albums, "+
-				"SUM(album_type = ?) AS moments, "+
-				"SUM(album_type = ?) AS months, "+
-				"SUM(album_type = ?) AS states, "+
-				"SUM(album_type = ?) AS folders",
+			Select("COALESCE(SUM(CASE WHEN album_type = ? THEN 1 END)) AS albums, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? THEN 1 END)) AS moments, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? THEN 1 END)) AS months, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? THEN 1 END)) AS states, "+
+				"COALESCE(SUM(CASE WHEN album_type = ? THEN 1 END)) AS folders",
 				entity.AlbumManual, entity.AlbumMoment, entity.AlbumMonth, entity.AlbumState, entity.AlbumFolder).
 			Where("deleted_at IS NULL AND (albums.album_type <> 'folder' OR albums.album_path IN (SELECT photos.photo_path FROM photos WHERE photos.deleted_at IS NULL))").
 			Take(&cfg.Count)
@@ -606,7 +606,7 @@ func (c *Config) ClientUser(withSettings bool) ClientConfig {
 	c.Db().
 		Table("files").
 		Select("COUNT(*) AS files").
-		Where("file_missing = 0 AND file_root = ? AND deleted_at IS NULL", entity.RootOriginals).
+		Where("file_missing = false AND file_root = ? AND deleted_at IS NULL", entity.RootOriginals).
 		Take(&cfg.Count)
 
 	c.Db().
@@ -640,7 +640,7 @@ func (c *Config) ClientUser(withSettings bool) ClientConfig {
 		Find(&cfg.Lenses)
 
 	c.Db().
-		Where("deleted_at IS NULL AND album_favorite = 1").
+		Where("deleted_at IS NULL AND album_favorite = true").
 		Limit(20).Order("album_title").
 		Find(&cfg.Albums)
 

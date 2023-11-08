@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS details (
+  photo_id SERIAL NOT NULL,
+  keywords varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  keywords_src bytea DEFAULT NULL,
+  notes varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  notes_src bytea DEFAULT NULL,
+  subject varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  subject_src bytea DEFAULT NULL,
+  artist varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  artist_src bytea DEFAULT NULL,
+  copyright varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  copyright_src bytea DEFAULT NULL,
+  license varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  license_src bytea DEFAULT NULL,
+  software varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  software_src bytea DEFAULT NULL,
+  created_at timestamp DEFAULT NULL,
+  updated_at timestamp DEFAULT NULL,
+  PRIMARY KEY (photo_id)
+);
