@@ -9,6 +9,7 @@ services:
   # The current Gorm version does NOT support compatible general data types:
   # https://github.com/photoprism/photoprism/issues/47
   photoprism:
+    user: "1000:1000"
     build: .
     image: photoprism/photoprism:develop
     depends_on:
@@ -24,6 +25,7 @@ services:
     volumes:
       - ".:/go/src/github.com/photoprism/photoprism"
       - "go-mod:/go/pkg/mod"
+      - "originals:/go/src/github.com/photoprism/photoprism/storage/originals"
     shm_size: "2gb"
     environment:
       PHOTOPRISM_INIT: "https"
@@ -75,10 +77,11 @@ services:
   lantern:
     #image: lanterndata/lantern:latest
     image: lantern-all
+      #user: "1000:1000"
     ports:
       - "5432:5432" # database port (host:container)
     volumes:
-      - "./storage/originals:/originals/"
+      - "originals:/originals/"
     environment:
       POSTGRES_DB: photoprism
       POSTGRES_USER: photoprism
@@ -93,4 +96,6 @@ services:
 
 volumes:
   go-mod:
+    driver: local
+  originals:
     driver: local
