@@ -78,7 +78,7 @@ services:
   ## Docs: https://www.postgresql.org/docs/
   lantern:
     #image: lanterndata/lantern:latest
-    image: lantern-all
+    image: lantern/lantern-all
       #user: "1000:1000"
     ports:
       - "5432:5432" # database port (host:container)
