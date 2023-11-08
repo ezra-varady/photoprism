@@ -11,7 +11,7 @@ services:
   photoprism:
     build: .
       #image: photoprism/photoprism:develop
-    image: lantern/photoprism
+    image: lanterndata/photoprism
     depends_on:
       - lantern
       - dummy-webdav
@@ -78,7 +78,7 @@ services:
   ## Docs: https://www.postgresql.org/docs/
   lantern:
     #image: lanterndata/lantern:latest
-    image: lantern/lantern-all
+    image: lanterndata/lantern-all
       #user: "1000:1000"
     ports:
       - "5432:5432" # database port (host:container)
